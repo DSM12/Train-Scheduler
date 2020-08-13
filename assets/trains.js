@@ -44,39 +44,39 @@ var firebaseConfig = {
     $("#train-frequency").val("");
 
 });
-//create Firebase event for adding train to database and row in chart in html when input is added
-database.ref().on("child_added", function(childSnapshot) {
-    console.log(childSnapshot.val())
-    //store snapshots in variables
-    var tName = childSnapshot.val().name;
-    var tDestination = childSnapshot.val().destination;
-    var firstTrain = childSnapshot.val().start;
-    var trainFreq = childSnapshot.val().frequency;
-    //train info
-    console.log(tName);
-    console.log(tDestination);
-    console.log(firstTrain);
-    console.log(trainFreq);
-    //calculate next arrival
-    var nextArrival = moment(firstTrain, "HH:mm").from(moment(trainFreq, "m"));
-    nextArrival = moment().format("HH:mm");
-    console.log("Next arrival: " + nextArrival);
-    //calculate how many minutes until next train
-    // var now = moment().format("HH:mm");
-    var minsArrive = nextArrival - trainFreq;
-    console.log("Minutes until next train: " + minsArrive);
-    //create the new row
-    var newRow = $("<tr>").append(
-        $("<td>").text(tName),
-        $("<td>").text(tDestination),
-        $("<td>").text(firstTrain),
-        $("<td>").text(trainFreq),
-        $("<td>").text(nextArrival),
-        $("<td>").text(minsArrive),
-    );
-    //append new row to table
-    $("#train-table").append(newRow);
+// //create Firebase event for adding train to database and row in chart in html when input is added
+// database.ref().on("child_added", function(childSnapshot) {
+//     console.log(childSnapshot.val())
+//     //store snapshots in variables
+//     var tName = childSnapshot.val().name;
+//     var tDestination = childSnapshot.val().destination;
+//     var firstTrain = childSnapshot.val().start;
+//     var trainFreq = childSnapshot.val().frequency;
+//     //train info
+//     console.log(tName);
+//     console.log(tDestination);
+//     console.log(firstTrain);
+//     console.log(trainFreq);
+//     //calculate next arrival
+//     var nextArrival = moment(firstTrain, "HH:mm").from(moment(trainFreq, "m"));
+//     nextArrival = moment().format("HH:mm");
+//     console.log("Next arrival: " + nextArrival);
+//     //calculate how many minutes until next train
+//     // var now = moment().format("HH:mm");
+//     var minsArrive = nextArrival - trainFreq;
+//     console.log("Minutes until next train: " + minsArrive);
+//     //create the new row
+//     var newRow = $("<tr>").append(
+//         $("<td>").text(tName),
+//         $("<td>").text(tDestination),
+//         $("<td>").text(firstTrain),
+//         $("<td>").text(trainFreq),
+//         $("<td>").text(nextArrival),
+//         $("<td>").text(minsArrive),
+//     );
+//     //append new row to table
+//     $("#train-table").append(newRow);
 
-}, function(errorObject) {
-    console.log("Errors handled:" + errorObject.code);
-});
+// }, function(errorObject) {
+//     console.log("Errors handled:" + errorObject.code);
+// });

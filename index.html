@@ -1,60 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Train Schedule</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
-    <script src="https://www.gstatic.com/firebasejs/7.15.3/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.15.3/firebase-analytics.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="widtd=device-widtd, initial-scale=1.0">
+  <title>Train Schedule</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
+  <script src="https://www.gstatic.com/firebasejs/7.15.3/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.15.3/firebase-analytics.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
 
 
 </head>
-<body background="assets/images/train.jpg">
-    <h1>When will your train come?</h1>
-    <table class="table" id="train-table">
-        <thead class="thead-dark">
-          <tr>
-            <th scope="col">Train Name</th>
-            <th scope="col">Destination</th>
-            <th scope="col">Frequency (min)</th>
-            <th scope="col">Next Arrival</th>
-            <th scope="col">Minutes Away</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row"></th>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
-      <br>
-      <form>
-        <div class="form-group">
-          <label for="train-name-input">Train Name</label>
-          <input type="name" class="form-control" id="train-name" aria-describedby="train-name" placeholder="Enter Train Name">
-        </div>
-        <div class="form-group">
-          <label for="train-destination">Train Destination</label>
-          <input type="destination" class="form-control" id="train-destination" placeholder="Enter Destination">
-        </div>
-        <div class="form-group">
-            <label for="train-start">First Train Time (HH:mm Military Time)</label>
-            <input type="start-time" class="form-control" id="train-start" placeholder="Enter Train Time">
-          </div>
-          <div class="form-group">
-            <label for="train-frequency">Frequency (min)</label>
-            <input type="frequency" class="form-control" id="train-frequency" placeholder="Enter Frequency">
-          </div>
-        <button type="submit" class="btn btn-primary" id="submit-button">Submit</button>
-      </form>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="./assets/javascript/logic.js"></script>
+<!-- "backgroung="assets/images/train.jpg" below in <body>" -->
+
+<body>
+
+  <!-- Added jumbrotron  -->
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <h1 class="display-4">When will your train come?</h1>
+      <p class="lead">*please have your fare ready*</p>
+    </div>
+  </div>
+
+
+  <!-- Current train schedule -->
+  <table class="table" id="train-table">
+    <!-- <tr>
+      <td scope="col">Train Name</td>
+      <td scope="col">Destination</td>
+      <td scope="col">Frequency (min)</td>
+      <td scope="col">Next Arrival</td>
+      <td scope="col">Minutes Away</td>
+    </tr> -->
+    </tdead>
+    <tbody>
+      <tr>
+        <td scope="row">Airport Line</td>
+        <td scope="row">Between Center City and Philadelphia International Airport</td>
+        <td scope="row">Frequency (min)</td>
+        <td scope="row">Next Arrival</td>
+        <td scope="row">12</td>
+      <tr>
+        <td scope="row">Paoli/tdorndale Line</td>
+        <td scope="row">Between Center City, Bryn Mawr, Malvern, Paoli & tdorndale</td>
+        <td scope="row">Frequency (min)</td>
+        <td scope="row">Next Arrival</td>
+        <td scope="row">45</td>
+      <tr>
+        <td scope="row">West Trenton Line</td>
+        <td scope="row">Between Center City Philadelphia, Jenkintown and West Trenton, NJ</td>
+        <td scope="row">Frequency (min)</td>
+        <td scope="row">Next Arrival</td>
+        <td scope="row">7</td>
+      <tr>
+        <td scope="row">Wilmington/Newark Line</td>
+        <td scope="row">Between Center City Philadelphia, Jenkintown and Warminster</td>
+        <td scope="row">Frequency (min)</td>
+        <td scope="row">Next Arrival</td>
+        <td scope="row">20</td>
+      <tr>
+        <td scope="row">Manayunk/Norristown Line</td>
+        <td scope="row">Between Center City, East Falls, Manayunk and Norristown</td>
+        <td scope="row">Frequency (min)</td>
+        <td scope="row">Next Arrival</td>
+        <td scope="row">26</td>
+      </tr>
+    </tbody>
+  </table>
+  <br>
+
+  <!-- Code below is where user adds tdeir train -->
+  <form>
+    <div class="form-group">
+      <label for="train-name-input">Train Name</label>
+      <input type="name" class="form-control" id="train-name" aria-describedby="train-name"
+        placeholder="Enter Train Name">
+    </div>
+    <div class="form-group">
+      <label for="train-destination">Train Destination</label>
+      <input type="destination" class="form-control" id="train-destination" placeholder="Enter Destination">
+    </div>
+    <div class="form-group">
+      <label for="train-start">First Train Time (HH:mm Military Time)</label>
+      <input type="start-time" class="form-control" id="train-start" placeholder="Enter Train Time">
+    </div>
+    <div class="form-group">
+      <label for="train-frequency">Frequency (min)</label>
+      <input type="frequency" class="form-control" id="train-frequency" placeholder="Enter Frequency">
+    </div>
+    <button type="submit" class="btn btn-primary" id="submit-button">Submit</button>
+  </form>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="./assets/trains.js"></script>
+
+
+
 </body>
+
 </html>
