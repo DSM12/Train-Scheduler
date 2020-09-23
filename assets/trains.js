@@ -14,7 +14,7 @@ $(document).ready(function () {
 
   firebase.initializeApp(firebaseConfig);
 
-  var database = firebase.database().ref();
+  var database = firebase.database();
 
   console.log("this is database :" + database)
   database.ref().on("child_added", function (snapshot) {
