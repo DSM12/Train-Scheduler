@@ -1,4 +1,6 @@
-var firebaseConfig = {
+$(document).ready(function () {
+
+  const firebaseConfig = {
     apiKey: "AIzaSyDptzalblggmxw1uUs9IKgpGkNi59jz0n8",
     authDomain: "train-scheduler-4a98d.firebaseapp.com",
     databaseURL: "https://train-scheduler-4a98d.firebaseio.com",
@@ -8,75 +10,128 @@ var firebaseConfig = {
     appId: "1:512904481254:web:07ff3de406bcfc9ab72e27",
     measurementId: "G-396Q7J83HM"
   };
-  // Initialize Firebase
+
+
   firebase.initializeApp(firebaseConfig);
 
-  var database = firebase.database();
+  var database = firebase.database().ref();
 
+  console.log("this is database :" + database)
+  database.ref().on("child_added", function (snapshot) {
 
-//on click event to prevent page from reloading when submit button clicked
-  $("#submit-button").on("click", function(event) {
-    event.preventDefault();
+    // Convert first train hours to minutes
+    var firstTrainHoursMinutesArr = snapshot.val().firstTrain.split(":", 2);
+    var firstTrainHours = parseInt(firstTrainHoursMinutesArr[0]);
+    var firstTrainMinutes = parseInt(firstTrainHoursMinutesArr[1]);
+    var firstTrainHoursToMinutes = firstTrainHours * 60
+    var firstTrainMinutesTotal = (firstTrainHoursToMinutes) + firstTrainMinutes
+    var timeNow = new Date();
+    var getHours = timeNow.getHours();
+    var getMinutes = timeNow.getMinutes();
+    var timeNowinMinutes = (getHours * 60) + getMinutes
+    // Get next train time by verifying that next train is in the future and not in the past
+    while (timeNowinMinutes > firstTrainMinutesTotal) {
+
+      firstTrainMinutesTotal = parseInt(firstTrainMinutesTotal) + parseInt(snapshot.val().frequency)
+    }
+
+    var nextTrainArrivalHour = parseInt(firstTrainMinutesTotal / 60)
+    var minutesAway = firstTrainMinutesTotal - timeNowinMinutes
+    var nextTrainArrivalMinutes = (getMinutes + minutesAway);
+    if (nextTrainArrivalMinutes >= 60 && nextTrainArrivalMinutes < 120) {
+      nextTrainArrivalMinutes = nextTrainArrivalMinutes - 60
+    }
+    if (nextTrainArrivalMinutes >= 120 && nextTrainArrivalMinutes < 180) {
+      nextTrainArrivalMinutes = nextTrainArrivalMinutes - 120
+    }
+    if (nextTrainArrivalMinutes >= 180 && nextTrainArrivalMinutes < 240) {
+      nextTrainArrivalMinutes = nextTrainArrivalMinutes - 180
+    }
+    if (nextTrainArrivalMinutes >= 240 && nextTrainArrivalMinutes < 300) {
+      nextTrainArrivalMinutes = nextTrainArrivalMinutes - 240
+    }
+    if (nextTrainArrivalMinutes >= 300 && nextTrainArrivalMinutes < 360) {
+      nextTrainArrivalMinutes = nextTrainArrivalMinutes - 300
+    }
+    if (nextTrainArrivalMinutes >= 360 && nextTrainArrivalMinutes < 420) {
+      nextTrainArrivalMinutes = nextTrainArrivalMinutes - 360
+    }
+    if (nextTrainArrivalMinutes < 10) {
+      nextTrainArrivalMinutes = "0" + nextTrainArrivalMinutes
+    }
+
+    var nextTrainArrivalFinal = nextTrainArrivalHour + ":" + nextTrainArrivalMinutes
+    var markup = "<tr><td>" + snapshot.val().train + "</td><td>" + snapshot.val().destination + "</td><td>" + snapshot.val().frequency + "</td><td>" + nextTrainArrivalFinal + "</td><td>" + minutesAway + "</td></tr>";
+
+    //Add trains already on firebase when page opens
+
+    $("table tbody").append(markup);
+  }, function (errorObject) {
+    console.log("The read failed: " + errorObject.code);
+  });
   
-    //grab values from input boxes and assign to respective variable
-    var tName = $("#train-name").val().trim();
-    var tDestination = $("#train-destination").val().trim();
-    var firstTrain = $("#train-start").val().trim();
-    var trainFreq = $("#train-frequency").val().trim();
-    //create object to hold new train info
-    var newTrain = {
-        name: tName,
-        destination: tDestination,
-        start: firstTrain,
-        frequency: trainFreq,
-    };
-//upload new train data to database
-    database.ref().push(newTrain);
-    //log to console
-    console.log(newTrain.name);
-    console.log(newTrain.destination);
-    console.log(newTrain.start);
-    console.log(newTrain.frequency);
-    //clear text boxes
-    $("#train-name").val("");
-    $("#train-destination").val("");
-    $("#train-start").val("");
-    $("#train-frequency").val("");
-
+  // On click function to add more trains
+  $(".btn").click(function () {
+    event.preventDefault();
+    var train = $("#input-train-name").val().trim();
+    var destination = $("#input-destination").val().trim();
+    var firstTrain = $("#input-first-train-time").val().trim();
+    var frequency = $("#input-frequency").val().trim();
+    // Convert first train hours to minutes
+    var firstTrainHoursMinutesArr = firstTrain.split(":", 2);
+    var firstTrainHours = parseInt(firstTrainHoursMinutesArr[0]);
+    var firstTrainMinutes = parseInt(firstTrainHoursMinutesArr[1]);
+    var firstTrainHoursToMinutes = firstTrainHours * 60
+    var firstTrainMinutesTotal = (firstTrainHoursToMinutes) + firstTrainMinutes
+    // Convert present time to minutes
+    var timeNow = new Date();
+    var getHours = timeNow.getHours();
+    var getMinutes = timeNow.getMinutes();
+    var timeNowinMinutes = (getHours * 60) + getMinutes
+    // Get next train time by verifying that next train is in the future and not in the past (same code from page load)
+    while (timeNowinMinutes > firstTrainMinutesTotal) {
+      firstTrainMinutesTotal = parseInt(firstTrainMinutesTotal) + parseInt(frequency)
+    }
+    var nextTrainArrivalHour = parseInt(firstTrainMinutesTotal / 60)
+    var minutesAway = firstTrainMinutesTotal - timeNowinMinutes
+    var nextTrainArrivalMinutes = (getMinutes + minutesAway);
+    if (nextTrainArrivalMinutes >= 60 && nextTrainArrivalMinutes < 120) {
+      nextTrainArrivalMinutes = nextTrainArrivalMinutes - 60
+    }
+    if (nextTrainArrivalMinutes >= 120 && nextTrainArrivalMinutes < 180) {
+      nextTrainArrivalMinutes = nextTrainArrivalMinutes - 120
+    }
+    if (nextTrainArrivalMinutes >= 180 && nextTrainArrivalMinutes < 240) {
+      nextTrainArrivalMinutes = nextTrainArrivalMinutes - 180
+    }
+    if (nextTrainArrivalMinutes >= 240 && nextTrainArrivalMinutes < 300) {
+      nextTrainArrivalMinutes = nextTrainArrivalMinutes - 240
+    }
+    if (nextTrainArrivalMinutes >= 300 && nextTrainArrivalMinutes < 360) {
+      nextTrainArrivalMinutes = nextTrainArrivalMinutes - 300
+    }
+    if (nextTrainArrivalMinutes >= 360 && nextTrainArrivalMinutes < 420) {
+      nextTrainArrivalMinutes = nextTrainArrivalMinutes - 360
+    }
+    if (nextTrainArrivalMinutes < 10) {
+      nextTrainArrivalMinutes = "0" + nextTrainArrivalMinutes
+    }
+    var nextTrainArrivalFinal = nextTrainArrivalHour + ":" + nextTrainArrivalMinutes
+    database.ref().push({
+      train: train,
+      destination: destination,
+      frequency: frequency,
+      firstTrain: firstTrain,
+      nextTrainArrivalFinal: nextTrainArrivalFinal,
+      minutesAway: minutesAway,
+      dateAdded: firebase.database.ServerValue.TIMESTAMP
+    });
+    // Add data to table inside html page after previous train rows from firebase limiting to only last entry
+    database.ref().limitToLast(1).on("child_added", function (snapshot) {
+      var markup = "<tr><td>" + snapshot.val().train + "</td><td>" + snapshot.val().destination + "</td><td>" + snapshot.val().frequency + "</td><td>" + nextTrainArrivalFinal + "</td><td>" + minutesAway + "</td></tr>";
+      $("table tbody").append(markup);
+    }, function (errorObject) {
+      console.log("The read failed: " + errorObject.code);
+    });
+  });
 });
-// //create Firebase event for adding train to database and row in chart in html when input is added
-// database.ref().on("child_added", function(childSnapshot) {
-//     console.log(childSnapshot.val())
-//     //store snapshots in variables
-//     var tName = childSnapshot.val().name;
-//     var tDestination = childSnapshot.val().destination;
-//     var firstTrain = childSnapshot.val().start;
-//     var trainFreq = childSnapshot.val().frequency;
-//     //train info
-//     console.log(tName);
-//     console.log(tDestination);
-//     console.log(firstTrain);
-//     console.log(trainFreq);
-//     //calculate next arrival
-//     var nextArrival = moment(firstTrain, "HH:mm").from(moment(trainFreq, "m"));
-//     nextArrival = moment().format("HH:mm");
-//     console.log("Next arrival: " + nextArrival);
-//     //calculate how many minutes until next train
-//     // var now = moment().format("HH:mm");
-//     var minsArrive = nextArrival - trainFreq;
-//     console.log("Minutes until next train: " + minsArrive);
-//     //create the new row
-//     var newRow = $("<tr>").append(
-//         $("<td>").text(tName),
-//         $("<td>").text(tDestination),
-//         $("<td>").text(firstTrain),
-//         $("<td>").text(trainFreq),
-//         $("<td>").text(nextArrival),
-//         $("<td>").text(minsArrive),
-//     );
-//     //append new row to table
-//     $("#train-table").append(newRow);
-
-// }, function(errorObject) {
-//     console.log("Errors handled:" + errorObject.code);
-// });
